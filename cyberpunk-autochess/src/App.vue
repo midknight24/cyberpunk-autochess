@@ -2,8 +2,6 @@
   <div id="app" style="height: 100%">
     <div style="width: 50%; height: 100%">
       <battle-grid style="height: 40%"></battle-grid>
-      <el-divider><i class="el-icon-close"></i></el-divider>
-      <battle-grid style="height: 40%"></battle-grid>
     </div>
   </div>
 </template>
