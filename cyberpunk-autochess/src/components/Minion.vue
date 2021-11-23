@@ -1,7 +1,7 @@
 <template>
   <div class="card" draggable="true">
     <div class="card_img">
-      <img src="../assets/CyberThug.jpg">
+      <img draggable="false" src="../assets/CyberThug.jpg">
     </div>
     <div class="card_stats">⚔️1</div>
   </div>
@@ -28,8 +28,9 @@ export default {
   }
 
   .card {
-    width: 62%;
-    height: 85%;
+    width: 15vw;
+    height: 10vh;
+    max-width: 153px;
     border-radius: 5%;
     background-color:coral;
     margin: auto;

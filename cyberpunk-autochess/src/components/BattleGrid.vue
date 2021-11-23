@@ -1,7 +1,7 @@
 <template>
     <div>
       <el-row :gutter="10" class="battle-row">
-        <el-col :span="8" class="battle-slot" id="player-a-1"><div class="grid-content bg-purple" @dragover="allowdrop" @drop="dropped" @dragenter="dragenter"></div></el-col>
+        <el-col :span="8" class="battle-slot" id="player-a-1"><div class="grid-content bg-purple" @dragover="allowdrop" @drop="dropped($event)"></div></el-col>
         <el-col :span="8" class="battle-slot" id="player-a-2"><div class="grid-content bg-purple-light"></div></el-col>
         <el-col :span="8" class="battle-slot" id="player-a-3"><div class="grid-content bg-purple"></div></el-col>
       </el-row>
@@ -17,7 +17,7 @@
       </el-row>
       <el-divider><i class="el-icon-close"></i></el-divider>
       <el-row :gutter="10" class="battle-row">
-        <el-col :span="8" class="battle-slot" id="player-b-1"><div class="grid-content bg-purple"><div draggable="True" @dragstart="dragged" @drag="drag"><Minion></Minion></div></div></el-col>
+        <el-col :span="8" class="battle-slot" id="player-b-1"><div class="grid-content bg-purple"></div></el-col>
         <el-col :span="8" class="battle-slot" id="player-b-2"><div class="grid-content bg-purple-light"></div></el-col>
         <el-col :span="8" class="battle-slot" id="player-b-3"><div class="grid-content bg-purple"></div></el-col>
       </el-row>
@@ -35,14 +35,10 @@
 </template>
 
 <script>
-import Minion from './Minion.vue'
 export default {
     name: 'BattleGrid',
     prop: {
         chessLists: Array
-    },
-    components: {
-      Minion
     },
     methods: {
       allowdrop: function(event) {
@@ -50,24 +46,11 @@ export default {
       },
       dropped: function(event) {
         event.preventDefault()
+        console.log(event)
         var data = event.dataTransfer.getData("text")
         console.log(data)
         event.target.appendChild(document.getElementById(data))
-      },
-      dragged: function(event) {
-        event.preventDefault()
-        console.log(event)
-        event.dataTransfer.setData("text", event.target.id)
-      },
-      dragenter: function(event) {
-        event.preventDefault()
-        console.log(event)
-      },
-      drag: function(event) {
-        event.preventDefault()
-        console.log(event)
-        event.dataTransfer.setData("text", event.target.id)
-      },
+      }
     }
 
     
