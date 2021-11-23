@@ -4,22 +4,35 @@
       <battle-grid style="height: 40%"></battle-grid>
     </div>
     <div style="width: 50%; float: left">
-      <Minion draggable="true" class="minion" id="card1" @dragstart.native="startDrag"></Minion>
+      <Card draggable="true" class="minion" id="card1" @dragstart.native="startDrag"
+        v-bind:card="minions[0]"></Card>
+      <Card draggable="true" class="minion" id="card2" @dragstart.native="startDrag"></Card>
     </div>
   </div>
 </template>
 
 <script>
 import BattleGrid from './components/BattleGrid.vue'
-import Minion from './components/Minion.vue'
+import Card from './components/Card.vue'
+import Minion from './CoreGame.js'
 export default {
   name: 'App',
   components: {
-    BattleGrid, Minion
+    BattleGrid, Card
   },
   data() {
     return {
-      greeting: 'Hello World'
+      greeting: 'Hello World',
+      minions: [
+        new Minion(
+          'Cyberthug',
+          'images/CyberThug.jpg',
+          {
+            powerType: 'MELEE',
+            power: 3
+          },
+          [])
+      ]
     }
   },
   methods: {

@@ -1,35 +1,35 @@
 <template>
     <div>
       <el-row :gutter="10" class="battle-row">
-        <el-col :span="8" class="battle-slot" id="player-a-1"><div class="grid-content bg-purple" @dragover="allowdrop" @drop="dropped($event)"></div></el-col>
-        <el-col :span="8" class="battle-slot" id="player-a-2"><div class="grid-content bg-purple-light"></div></el-col>
-        <el-col :span="8" class="battle-slot" id="player-a-3"><div class="grid-content bg-purple"></div></el-col>
+        <el-col :span="8" class="battle-slot"><div ref="player-a-7" class="grid-content bg-purple" @dragover="allowdrop" @drop="dropped($event)"></div></el-col>
+        <el-col :span="8" class="battle-slot"><div ref="player-a-8" class="grid-content bg-purple-light"></div></el-col>
+        <el-col :span="8" class="battle-slot"><div ref="player-a-9" class="grid-content bg-purple"></div></el-col>
       </el-row>
       <el-row :gutter="10" class="battle-row">
-        <el-col :span="8" class="battle-slot" id="player-a-4"><div class="grid-content bg-purple"></div></el-col>
-        <el-col :span="8" class="battle-slot" id="player-a-5"><div class="grid-content bg-purple-light"></div></el-col>
-        <el-col :span="8" class="battle-slot" id="player-a-6"><div class="grid-content bg-purple"></div></el-col>
+        <el-col :span="8" class="battle-slot"><div ref="player-a-4" class="grid-content bg-purple"></div></el-col>
+        <el-col :span="8" class="battle-slot"><div ref="player-a-5" class="grid-content bg-purple-light"></div></el-col>
+        <el-col :span="8" class="battle-slot"><div ref="player-a-6" class="grid-content bg-purple"></div></el-col>
       </el-row>
       <el-row :gutter="10" class="battle-row">
-        <el-col :span="8" class="battle-slot" id="player-a-7"><div class="grid-content bg-purple"></div></el-col>
-        <el-col :span="8" class="battle-slot" id="player-a-8"><div class="grid-content bg-purple-light"></div></el-col>
-        <el-col :span="8" class="battle-slot" id="player-a-9"><div class="grid-content bg-purple"></div></el-col>
+        <el-col :span="8" class="battle-slot"><div ref="player-a-1" class="grid-content bg-purple"></div></el-col>
+        <el-col :span="8" class="battle-slot"><div ref="player-a-2" class="grid-content bg-purple-light"></div></el-col>
+        <el-col :span="8" class="battle-slot"><div ref="player-a-3" class="grid-content bg-purple"></div></el-col>
       </el-row>
       <el-divider><i class="el-icon-close"></i></el-divider>
       <el-row :gutter="10" class="battle-row">
-        <el-col :span="8" class="battle-slot" id="player-b-1"><div class="grid-content bg-purple"></div></el-col>
-        <el-col :span="8" class="battle-slot" id="player-b-2"><div class="grid-content bg-purple-light"></div></el-col>
-        <el-col :span="8" class="battle-slot" id="player-b-3"><div class="grid-content bg-purple"></div></el-col>
+        <el-col :span="8" class="battle-slot"><div ref="player-b-1" class="grid-content bg-purple"></div></el-col>
+        <el-col :span="8" class="battle-slot"><div ref="player-b-2" class="grid-content bg-purple-light"></div></el-col>
+        <el-col :span="8" class="battle-slot"><div ref="player-b-3" class="grid-content bg-purple"></div></el-col>
       </el-row>
       <el-row :gutter="10" class="battle-row">
-        <el-col :span="8" class="battle-slot" id="player-b-4"><div class="grid-content bg-purple"></div></el-col>
-        <el-col :span="8" class="battle-slot" id="player-b-5"><div class="grid-content bg-purple-light"></div></el-col>
-        <el-col :span="8" class="battle-slot" id="player-b-6"><div class="grid-content bg-purple"></div></el-col>
+        <el-col :span="8" class="battle-slot"><div ref="player-b-4" class="grid-content bg-purple"></div></el-col>
+        <el-col :span="8" class="battle-slot"><div ref="player-b-5" class="grid-content bg-purple-light"></div></el-col>
+        <el-col :span="8" class="battle-slot"><div ref="player-b-6" class="grid-content bg-purple"></div></el-col>
       </el-row>
       <el-row :gutter="10" class="battle-row">
-        <el-col :span="8" class="battle-slot" id="player-b-7"><div class="grid-content bg-purple"></div></el-col>
-        <el-col :span="8" class="battle-slot" id="player-b-8"><div class="grid-content bg-purple-light"></div></el-col>
-        <el-col :span="8" class="battle-slot" id="player-b-9"><div class="grid-content bg-purple"></div></el-col>
+        <el-col :span="8" class="battle-slot"><div ref="player-b-7" class="grid-content bg-purple"></div></el-col>
+        <el-col :span="8" class="battle-slot"><div ref="player-b-8" class="grid-content bg-purple-light"></div></el-col>
+        <el-col :span="8" class="battle-slot"><div ref="player-b-9" class="grid-content bg-purple"></div></el-col>
       </el-row>
     </div>
 </template>
