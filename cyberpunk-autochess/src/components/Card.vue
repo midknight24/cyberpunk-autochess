@@ -33,7 +33,10 @@ export default {
       else if(this.card.powerType == 'RANGED'){
         powerEmoji = '🎯'
       }
-      return powerEmoji+this.card.power
+      var armorEmoji = "🛡️"
+      var armor = this.card.armor? armorEmoji+this.card.armor:""
+      var power = this.card.power? powerEmoji+this.card.power:""
+      return power+armor
     }
   }
 }

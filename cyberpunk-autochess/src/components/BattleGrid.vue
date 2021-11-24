@@ -1,35 +1,35 @@
 <template>
     <div>
       <el-row :gutter="10" class="battle-row">
-        <el-col :span="8" class="battle-slot"><div ref="player-a-7" class="grid-content bg-purple" @dragover="allowdrop" @drop="dropped($event)"></div></el-col>
-        <el-col :span="8" class="battle-slot"><div ref="player-a-8" class="grid-content bg-purple-light"></div></el-col>
-        <el-col :span="8" class="battle-slot"><div ref="player-a-9" class="grid-content bg-purple"></div></el-col>
+        <el-col :span="8" class="battle-slot"><div id="a-7" class="grid-content bg-purple" @dragover="allowdrop" @drop="dropped($event)"></div></el-col>
+        <el-col :span="8" class="battle-slot"><div id="a-8" class="grid-content bg-purple-light" @dragover="allowdrop" @drop="dropped($event)" ></div></el-col>
+        <el-col :span="8" class="battle-slot"><div id="a-9" class="grid-content bg-purple" @dragover="allowdrop" @drop="dropped($event)"></div></el-col>
       </el-row>
       <el-row :gutter="10" class="battle-row">
-        <el-col :span="8" class="battle-slot"><div ref="player-a-4" class="grid-content bg-purple"></div></el-col>
-        <el-col :span="8" class="battle-slot"><div ref="player-a-5" class="grid-content bg-purple-light"></div></el-col>
-        <el-col :span="8" class="battle-slot"><div ref="player-a-6" class="grid-content bg-purple"></div></el-col>
+        <el-col :span="8" class="battle-slot"><div id="a-4" class="grid-content bg-purple" @dragover="allowdrop" @drop="dropped($event)"></div></el-col>
+        <el-col :span="8" class="battle-slot"><div id="a-5" class="grid-content bg-purple-light" @dragover="allowdrop" @drop="dropped($event)"></div></el-col>
+        <el-col :span="8" class="battle-slot"><div id="a-6" class="grid-content bg-purple" @dragover="allowdrop" @drop="dropped($event)"></div></el-col>
       </el-row>
       <el-row :gutter="10" class="battle-row">
-        <el-col :span="8" class="battle-slot"><div ref="player-a-1" class="grid-content bg-purple"></div></el-col>
-        <el-col :span="8" class="battle-slot"><div ref="player-a-2" class="grid-content bg-purple-light"></div></el-col>
-        <el-col :span="8" class="battle-slot"><div ref="player-a-3" class="grid-content bg-purple"></div></el-col>
+        <el-col :span="8" class="battle-slot"><div id="a-1" class="grid-content bg-purple" @dragover="allowdrop" @drop="dropped($event)"></div></el-col>
+        <el-col :span="8" class="battle-slot"><div id="a-2" class="grid-content bg-purple-light" @dragover="allowdrop" @drop="dropped($event)"></div></el-col>
+        <el-col :span="8" class="battle-slot"><div id="a-3" class="grid-content bg-purple" @dragover="allowdrop" @drop="dropped($event)"></div></el-col>
       </el-row>
       <el-divider><i class="el-icon-close"></i></el-divider>
       <el-row :gutter="10" class="battle-row">
-        <el-col :span="8" class="battle-slot"><div ref="player-b-1" class="grid-content bg-purple"></div></el-col>
-        <el-col :span="8" class="battle-slot"><div ref="player-b-2" class="grid-content bg-purple-light"></div></el-col>
-        <el-col :span="8" class="battle-slot"><div ref="player-b-3" class="grid-content bg-purple"></div></el-col>
+        <el-col :span="8" class="battle-slot"><div id="b-1" class="grid-content bg-purple" @dragover="allowdrop" @drop="dropped($event)"></div></el-col>
+        <el-col :span="8" class="battle-slot"><div id="b-2" class="grid-content bg-purple-light" @dragover="allowdrop" @drop="dropped($event)"></div></el-col>
+        <el-col :span="8" class="battle-slot"><div id="b-3" class="grid-content bg-purple" @dragover="allowdrop" @drop="dropped($event)"></div></el-col>
       </el-row>
       <el-row :gutter="10" class="battle-row">
-        <el-col :span="8" class="battle-slot"><div ref="player-b-4" class="grid-content bg-purple"></div></el-col>
-        <el-col :span="8" class="battle-slot"><div ref="player-b-5" class="grid-content bg-purple-light"></div></el-col>
-        <el-col :span="8" class="battle-slot"><div ref="player-b-6" class="grid-content bg-purple"></div></el-col>
+        <el-col :span="8" class="battle-slot"><div id="b-4" class="grid-content bg-purple" @dragover="allowdrop" @drop="dropped($event)"></div></el-col>
+        <el-col :span="8" class="battle-slot"><div id="b-5" class="grid-content bg-purple-light" @dragover="allowdrop" @drop="dropped($event)"></div></el-col>
+        <el-col :span="8" class="battle-slot"><div id="b-6" class="grid-content bg-purple" @dragover="allowdrop" @drop="dropped($event)"></div></el-col>
       </el-row>
       <el-row :gutter="10" class="battle-row">
-        <el-col :span="8" class="battle-slot"><div ref="player-b-7" class="grid-content bg-purple"></div></el-col>
-        <el-col :span="8" class="battle-slot"><div ref="player-b-8" class="grid-content bg-purple-light"></div></el-col>
-        <el-col :span="8" class="battle-slot"><div ref="player-b-9" class="grid-content bg-purple"></div></el-col>
+        <el-col :span="8" class="battle-slot"><div id="b-7" class="grid-content bg-purple" @dragover="allowdrop" @drop="dropped($event)"></div></el-col>
+        <el-col :span="8" class="battle-slot"><div id="b-8" class="grid-content bg-purple-light" @dragover="allowdrop" @drop="dropped($event)"></div></el-col>
+        <el-col :span="8" class="battle-slot"><div id="b-9" class="grid-content bg-purple" @dragover="allowdrop" @drop="dropped($event)"></div></el-col>
       </el-row>
     </div>
 </template>
@@ -37,18 +37,23 @@
 <script>
 export default {
     name: 'BattleGrid',
-    prop: {
-        chessLists: Array
+    props: {
+        game: Object
     },
     methods: {
       allowdrop: function(event) {
-        event.preventDefault()
+        const slot = this.game.parseSlotId(event.target.id)
+        const minion = event.dataTransfer.getData("minion")
+        console.log(this.game)
+        if(this.game.canDrop(slot, minion)){
+          event.preventDefault()
+        }
       },
       dropped: function(event) {
+        console.log(event.target)
+        console.log(event.target.id)
         event.preventDefault()
-        console.log(event)
         var data = event.dataTransfer.getData("text")
-        console.log(data)
         event.target.appendChild(document.getElementById(data))
       }
     }

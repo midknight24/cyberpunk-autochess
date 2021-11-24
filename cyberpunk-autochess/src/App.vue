@@ -1,12 +1,15 @@
 <template>
   <div id="app" style="height: 100%;">
     <div style="width: 50%; height: 100%; float: left">
-      <battle-grid style="height: 40%"></battle-grid>
+      <battle-grid style="height: 40%"
+        :game="game"></battle-grid>
     </div>
     <div style="width: 50%; float: left">
-      <Card draggable="true" class="minion" id="card1" @dragstart.native="startDrag"
-        v-bind:card="minions[0]"></Card>
-      <Card draggable="true" class="minion" id="card2" @dragstart.native="startDrag"></Card>
+      <Card draggable="true" class="minion" @dragstart.native="startDrag($event,minion)"
+        :id="minion.id"
+        :card="minion"
+        :key="minion.id"
+        v-for="minion in game.minions"></Card>
     </div>
   </div>
 </template>
@@ -14,7 +17,7 @@
 <script>
 import BattleGrid from './components/BattleGrid.vue'
 import Card from './components/Card.vue'
-import Minion from './CoreGame.js'
+import Game from './CoreGame.js'
 export default {
   name: 'App',
   components: {
@@ -23,22 +26,16 @@ export default {
   data() {
     return {
       greeting: 'Hello World',
-      minions: [
-        new Minion(
-          'Cyberthug',
-          'images/CyberThug.jpg',
-          {
-            powerType: 'MELEE',
-            power: 3
-          },
-          [])
-      ]
+      game: new Game()
+
     }
   },
   methods: {
-    startDrag: function(event) {
+    startDrag: function(event,minion) {
       console.log(event)
+      console.log(minion)
       event.dataTransfer.setData("text", event.target.id)
+      event.dataTransfer.setData("minion", minion)
       event.dataTransfer.dropEffect = "move"
       event.dataTransfer.effectAllowed = "move"
     },
