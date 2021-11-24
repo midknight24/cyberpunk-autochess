@@ -3,13 +3,18 @@ import { nanoid } from 'nanoid'
 class Minion {
     // stats: {'power': 3, 'shield': 4, ...}
     // actions: [MeleeAttackCls, HealCls, ...]
-    constructor(player_belong, name, image, stats, actions=[]){
+
+    constructor(playerBelong, name, image, stats, game, actions=[]){
         this.id = nanoid()
         this.name = name
         this.image = image
         this.stats = stats
         this.actions = actions
-        this.player_belong = player_belong
+        this.playerBelong = playerBelong 
+        // 0 means not on battleground
+        this.location = 0
+        this.game = game
+        this.actioned = false
     }
 
     get powerType(){
@@ -23,13 +28,29 @@ class Minion {
     get armor(){
         return this.stats.armor || 0
     }
+
+    move(targetSlot){
+        var target = this.game.battleGround[this.playerBelong][targetSlot-1]
+        if(target != 0){
+            throw 'Slot occupied'
+        }
+        if(this.location > 0){
+            this.game.battleGround[this.playerBelong][this.location-1] = 0
+        }
+        this.game.battleGround[this.playerBelong][targetSlot-1] = this
+        this.location = targetSlot
+    }
 }
 
 class Game {
     constructor(){
         this.turn = 0
-        this.battleGroundA = [0,0,0,0,0,0,0,0,0]
-        this.battleGroundB = [0,0,0,0,0,0,0,0,0]
+        this.currentRow = 1
+        this.battleGround = {
+            'A': [0,0,0,0,0,0,0,0,0],
+            'B': [0,0,0,0,0,0,0,0,0]
+        }
+        this.minionSelected = null
         this.minions = [
             new Minion(
             'A',
@@ -38,7 +59,9 @@ class Game {
             {
               powerType: 'MELEE',
               power: 3
-            }),
+            },
+            this
+            ),
             new Minion(
                 'B',
                 'Cyberthug',
@@ -46,25 +69,28 @@ class Game {
                 {
                   powerType: 'MELEE',
                   power: 3
-                })
+                }, this
+                ),
         ]
     }
 
-    // TODO: edit this
     canDrop(slot, minion){
-        if(minion.player_belong == 'A'){
-            return this.battleGroundA[slot+1]==0
-        }else{
-            return this.battleGroundB[slot+1]==0
+        var slot_index = slot.slot
+        var slot_belong = slot.playerBelong
+        if(minion.playerBelong == slot_belong){
+            return this.battleGround[slot_belong][slot_index-1]==0
         }
+        return false
     }
 
     parseSlotId(slot_str){
         return {
-            player_belong: slot_str.split('-')[0],
+            playerBelong: slot_str.split('-')[0].toUpperCase(),
             slot: slot_str.split('-')[1]
         }
     }
+
+
 
 }
 export default Game

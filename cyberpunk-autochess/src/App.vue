@@ -5,11 +5,14 @@
         :game="game"></battle-grid>
     </div>
     <div style="width: 50%; float: left">
-      <Card draggable="true" class="minion" @dragstart.native="startDrag($event,minion)"
+      <Card draggable="true" class="minion"
+        @dragstart.native="startDrag($event,minion)"
+        @dragend.native="game.minionSelected = null"
         :id="minion.id"
         :card="minion"
         :key="minion.id"
         v-for="minion in game.minions"></Card>
+      <el-button class="NextRoundBtn" type="primary">Next Round</el-button>
     </div>
   </div>
 </template>
@@ -27,18 +30,18 @@ export default {
     return {
       greeting: 'Hello World',
       game: new Game()
-
     }
   },
   methods: {
     startDrag: function(event,minion) {
-      console.log(event)
-      console.log(minion)
+      this.game.minionSelected = minion
       event.dataTransfer.setData("text", event.target.id)
-      event.dataTransfer.setData("minion", minion)
       event.dataTransfer.dropEffect = "move"
       event.dataTransfer.effectAllowed = "move"
     },
+  },
+  mounted(){
+    console.log(this.game)
   }
 }
 </script>
@@ -61,4 +64,11 @@ body, html {
   right: 100px
 }
 
+.NextRoundBtn {
+  width: 10vw;
+  height: 5vh;
+  position: absolute;
+  top: 1%;
+  right: 1%;
+}
 </style>

@@ -43,16 +43,16 @@ export default {
     methods: {
       allowdrop: function(event) {
         const slot = this.game.parseSlotId(event.target.id)
-        const minion = event.dataTransfer.getData("minion")
-        console.log(this.game)
+        const minion = this.game.minionSelected
         if(this.game.canDrop(slot, minion)){
+          // default will show not drop
           event.preventDefault()
         }
       },
       dropped: function(event) {
-        console.log(event.target)
-        console.log(event.target.id)
         event.preventDefault()
+        const slot = this.game.parseSlotId(event.target.id)
+        this.game.minionSelected.move(slot.slot)
         var data = event.dataTransfer.getData("text")
         event.target.appendChild(document.getElementById(data))
       }

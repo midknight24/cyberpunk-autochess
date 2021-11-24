@@ -1,5 +1,5 @@
 <template>
-  <div class="card" draggable="true">
+  <div class="card" draggable="true" :class="{playerAColor: card.playerBelong == 'A'}">
     <div class="card_img">
       <img draggable="false" :src="this.img">
     </div>
@@ -25,7 +25,6 @@ export default {
       return `${publicPath}${this.card.image}`
     },
     cardStats: function(){
-      console.log(this.card)
       var powerEmoji = '❓'
       if(this.card.powerType == 'MELEE'){
         powerEmoji = '⚔️'
@@ -61,9 +60,14 @@ export default {
     height: 10vh;
     max-width: 153px;
     border-radius: 5%;
-    background-color:coral;
+    background-color: cornflowerblue;
     margin: auto;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     cursor: grab;
   }
+
+  .playerAColor {
+    background-color:coral;
+  }
+
 </style>
