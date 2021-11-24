@@ -15,6 +15,7 @@ class Minion {
         this.location = 0
         this.game = game
         this.actioned = false
+        this.dead = false
     }
 
     get powerType(){
@@ -51,6 +52,7 @@ class Game {
             'B': [0,0,0,0,0,0,0,0,0]
         }
         this.minionSelected = null
+        this.graveyard = []
         this.minions = [
             new Minion(
             'A',
