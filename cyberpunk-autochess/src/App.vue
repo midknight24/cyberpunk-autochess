@@ -12,7 +12,7 @@
         :card="minion"
         :key="minion.id"
         v-for="minion in game.minions"></Card>
-      <el-button class="NextRoundBtn" type="primary">Next Round</el-button>
+      <el-button class="NextRoundBtn" type="primary" @click="game.runTurn()">Next Round</el-button>
     </div>
   </div>
 </template>

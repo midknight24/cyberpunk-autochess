@@ -17,12 +17,10 @@ function shuffle(array) {
   }
   
 
-function randomOrder(n){
-    var arr = []
-    for(let i=1;i<n+1;i++){
-        arr.push(i)
-    }
-    return shuffle(arr)
+function drawRandom(array){
+  const elem = array[Math.floor(Math.random()*array.length)]
+  return elem
 }
 
-export default {randomOrder}
+
+export {shuffle, drawRandom}
