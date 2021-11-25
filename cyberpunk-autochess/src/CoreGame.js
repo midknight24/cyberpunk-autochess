@@ -32,11 +32,12 @@ class Minion {
     }
 
     move(targetSlot){
+
         if(this.location > 0){
             this.game.battleGround[this.playerBelong][this.location-1] = 0
         }
         // -1 means graveyard
-        if(targetSlot == -1){
+        if(targetSlot <= 0){
             return
         }
 
@@ -61,18 +62,20 @@ class Minion {
         }
     }
 
-    // forward as far as possible
+    // forward as far as possible, return new location
     forward(){
         const prevLocation = this.location
-        var nextSlot = this.location-3
-        while(nextSlot>=1 && this.game.battleGround[this.playerBelong][nextSlot-1] == 0){
-            this.move(nextSlot)
+        var nextSlot = this.location - 3
+        while(nextSlot>3 && (this.game.battleGround[this.playerBelong][nextSlot-1] == 0)){
+            nextSlot -= 3
         }
+        this.move(nextSlot)
         const card = document.getElementById(`${this.id}`)
         const oldParent = document.getElementById(`${this.playerBelong.toLowerCase()}-${prevLocation}`)
         const newParent = document.getElementById(`${this.playerBelong.toLowerCase()}-${this.location}`)
         oldParent.removeChild(card)
         newParent.appendChild(card)
+        return nextSlot
     }
 
     action(){
@@ -141,10 +144,9 @@ class Game {
             console.log(SideOrder)
             SideOrder.forEach(s=>{
                 var thisMinion = this.battleGround[s][index]
-                var thatMinion = this.battleGround[s=='A'?'B':'A'][index]
                 if(thisMinion){
-                    console.log("minion found: ", thisMinion)
-                    thisMinion.forward()
+                    const newSlot = thisMinion.forward()
+                    var thatMinion = this.battleGround[s=='A'?'B':'A'][newSlot-1]
                     if(thatMinion){
                         var action = thisMinion.action()
                         action = new action(thisMinion, [thatMinion])
