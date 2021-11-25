@@ -63,10 +63,16 @@ class Minion {
 
     // forward as far as possible
     forward(){
+        const prevLocation = this.location
         var nextSlot = this.location-3
         while(nextSlot>=1 && this.game.battleGround[this.playerBelong][nextSlot-1] == 0){
             this.move(nextSlot)
         }
+        const card = document.getElementById(`${this.id}`)
+        const oldParent = document.getElementById(`${this.playerBelong.toLowerCase()}-${prevLocation}`)
+        const newParent = document.getElementById(`${this.playerBelong.toLowerCase()}-${this.location}`)
+        oldParent.removeChild(card)
+        newParent.appendChild(card)
     }
 
     action(){
@@ -126,7 +132,8 @@ class Game {
     }
 
     runTurn(){
-        var currentArray = Array.from([1,2,3], x => x+x*(this.currentRow-1))
+        var currentArray = Array.from([1,2,3], x => x+3*(this.currentRow-1))
+        console.log(currentArray)
         var shuffled = shuffle(currentArray)
         shuffled.forEach(i=>{
             var index = i - 1
@@ -136,6 +143,7 @@ class Game {
                 var thisMinion = this.battleGround[s][index]
                 var thatMinion = this.battleGround[s=='A'?'B':'A'][index]
                 if(thisMinion){
+                    console.log("minion found: ", thisMinion)
                     thisMinion.forward()
                     if(thatMinion){
                         var action = thisMinion.action()
@@ -146,7 +154,7 @@ class Game {
 
             })
         })
-        
+        this.currentRow = this.currentRow < 3? this.currentRow+1: 1
     }
 }
 export default Game
