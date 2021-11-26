@@ -20,7 +20,7 @@
 <script>
 import BattleGrid from './components/BattleGrid.vue'
 import Card from './components/Card.vue'
-import Game from './CoreGame.js'
+import {Game} from './CoreGame.js'
 export default {
   name: 'App',
   components: {

@@ -17,6 +17,8 @@ class Minion {
         this.game = game
         this.actioned = false
         this.dead = false
+        this.events = []
+        this.hasNewEvent = false
     }
 
     get powerType(){
@@ -51,7 +53,7 @@ class Minion {
     }
     takeHit(amount, by){
         // pierced > 0 means armor breaks
-        console.log("hitted by",by)
+        by
         var pierced =  amount - this.armor
         this.stats.armor =  pierced > 0? 0: -pierced
         this.stats.power = pierced > 0? this.power - pierced: this.power
@@ -64,6 +66,9 @@ class Minion {
 
     // forward as far as possible, return new location
     forward(){
+        if(this.location<=3){
+            return this.location
+        }
         const prevLocation = this.location
         var nextSlot = this.location - 3
         while(nextSlot>3 && (this.game.battleGround[this.playerBelong][nextSlot-1] == 0)){
@@ -84,6 +89,18 @@ class Minion {
 
 
 }
+class Event {
+    constructor(type, targetId, message){
+        /*
+        type in ['ATTACKED','ATTACKING','DYING']
+        */
+        this.type = type
+        this.targetId = targetId
+        this.message = message
+    }
+
+}
+
 
 class Game {
     constructor(){
@@ -95,6 +112,8 @@ class Game {
         }
         this.minionSelected = null
         this.graveyard = []
+        this.events = []
+        this.newEvent = false
         this.minions = [
             new Minion(
             'A',
@@ -112,7 +131,7 @@ class Game {
                 'images/CyberThug.jpg',
                 {
                   powerType: 'MELEE',
-                  power: 3
+                  power: 2
                 }, this
                 ),
         ]
@@ -135,13 +154,12 @@ class Game {
     }
 
     runTurn(){
+        console.log("running turn")
         var currentArray = Array.from([1,2,3], x => x+3*(this.currentRow-1))
-        console.log(currentArray)
         var shuffled = shuffle(currentArray)
         shuffled.forEach(i=>{
             var index = i - 1
             var SideOrder = shuffle(['A','B'])
-            console.log(SideOrder)
             SideOrder.forEach(s=>{
                 var thisMinion = this.battleGround[s][index]
                 if(thisMinion){
@@ -159,4 +177,4 @@ class Game {
         this.currentRow = this.currentRow < 3? this.currentRow+1: 1
     }
 }
-export default Game
+export {Game, Event}
