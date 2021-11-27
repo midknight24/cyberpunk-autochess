@@ -40,6 +40,32 @@ export default {
     props: {
         game: Object
     },
+    data() {
+      return {
+        currentRow : this.game.currentRow
+      }
+    },
+    watch: {
+      game: {
+        deep: true,
+        handler(game){
+          this.currentRow = game.currentRow
+        }
+      },
+      currentRow: {
+        immediate: true,
+        handler(newRow, oldRow){
+          setTimeout(()=>{
+            console.log("ROW CHANGED")
+            this.unfocusRow('a', oldRow)
+            this.unfocusRow('b', oldRow)
+            this.focusRow('a', newRow)
+            this.focusRow('b', newRow)
+          }, 1400)
+        }
+      }
+
+    }, 
     methods: {
       allowdrop: function(event) {
         const slot = this.game.parseSlotId(event.target.id)
@@ -55,6 +81,23 @@ export default {
         this.game.minionSelected.move(slot.slot)
         var data = event.dataTransfer.getData("text")
         event.target.appendChild(document.getElementById(data))
+      },
+      focusRow: function(player, rownum) {
+        const rowIds = Array.from([1,2,3], x => x + 3*(rownum-1))
+        rowIds.forEach((id)=>{
+          const cid = `${player.toLowerCase()}-${id}`
+          const grid = document.getElementById(cid)
+          grid.classList.add('grid-highligh')
+        })
+      },
+      unfocusRow: function(player, rownum) {
+        const rowIds = Array.from([1,2,3], x => x + 3*(rownum-1))
+        rowIds.forEach((id)=>{
+          const cid = `${player.toLowerCase()}-${id}`
+          const grid = document.getElementById(cid)
+          if(grid)
+            grid.classList.remove('grid-highligh')
+        })
       }
     }
 
@@ -92,5 +135,9 @@ export default {
 .row-bg {
   padding: 10px 0;
   background-color: #f9fafc;
+}
+
+.grid-highligh {
+  box-shadow: 0 4px 8px 0 rgba(114, 45, 132, 0.2), 0 6px 20px 0 rgba(98, 169, 243, 1);
 }
 </style>

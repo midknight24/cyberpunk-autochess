@@ -149,7 +149,7 @@ export default {
 
   @keyframes attackingDown {
     0% {transform: translateY(-2px);}
-    50% {transform: translateY(-10px);}
+    50% {transform: translateY(-20px);}
     60% {transform: translateY(8px)}
     100% {transform: translateY(0px);}
   }
@@ -157,20 +157,20 @@ export default {
 
   @keyframes attackingUp {
     0% {transform: translateY(2px);}
-    50% {transform: translateY(10px);}
+    50% {transform: translateY(20px);}
     60% {transform: translateY(-8px)}
     100% {transform: translateY(0px);}
   }
 
   @keyframes attackedUp {
-    0% {transform: translateY(-7px);}
+    0% {transform: translateY(-25px);}
     50% {transform: translateY(-4px);}
     70% {transform: translateY(-2px);}
     100% {transform: translateY(0px);}
   }
 
   @keyframes attackedDown {
-    0% {transform: translateY(7px);}
+    0% {transform: translateY(25px);}
     50% {transform: translateY(4px);}
     70% {transform: translateY(2px);}
     100% {transform: translateY(0px);}
