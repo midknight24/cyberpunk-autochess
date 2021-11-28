@@ -26,65 +26,73 @@ export default {
     }
   },
   mounted(){
-    this.cardStats = this.computeCardStat()
+    this.cardStats = this.computeCardStat(this.card.stats)
   },
   methods: {
-    computeCardStat: function(){
+    computeCardStat: function(stats){
       var powerEmoji = '❓'
-      if(this.card.powerType == 'MELEE'){
+      if(stats.powerType == 'MELEE'){
         powerEmoji = '⚔️'
       }
-      else if(this.card.powerType == 'RANGED'){
+      else if(stats.powerType == 'RANGED'){
         powerEmoji = '🎯'
       }
+      if(stats.power<=0){
+        powerEmoji = '💀'
+      }
       var armorEmoji = "🛡️"
-      var armor = this.card.armor? armorEmoji+this.card.armor:""
-      var power = this.card.power? powerEmoji+this.card.power:""
-      return power+armor
+      var armor = stats.armor>0? armorEmoji+stats.armor:""
+      var power = powerEmoji+stats.power
+      const total = power+armor
+      return total
     },
 
-    attacked: function(){
+    addAnimation: function(animationClass, duration, callback=null){
       const div = document.getElementById(this.card.id)
-      const styleClass = this.card.playerBelong == 'A'? 'A-attacked': 'B-attacked'
-      div.classList.add(styleClass)
+      div.classList.add(animationClass)
       setTimeout(()=>{
-        div.classList.remove(styleClass)
-        this.cardStats = this.computeCardStat()
-      }, 1001)
+        div.classList.remove(animationClass)
+        if(callback) callback()
+      }, duration)
     },
-    attacking: function(){
-      const div = document.getElementById(this.card.id)
+
+
+    attacked: function(stats){
+      const styleClass = this.card.playerBelong == 'A'? 'A-attacked': 'B-attacked'
+      this.addAnimation(styleClass, 1001, ()=>{this.cardStats = this.computeCardStat(stats)})
+    },
+    attacking: function(stats){
       const styleClass = this.card.playerBelong == 'A'? 'A-attacking': 'B-attacking'
-      div.classList.add(styleClass)
-      setTimeout(()=>{
-        div.classList.remove(styleClass)
-        this.cardStats = this.computeCardStat()
-      }, 1001)
+      this.addAnimation(styleClass, 1001, ()=>{this.cardStats = this.computeCardStat(stats)})
     },
     dying: function(){
-
+      const styleClass = this.card.playerBelong == 'A'? 'A-dying': 'B-dying'
+      this.addAnimation(styleClass, 1001, ()=>{
+        const div = document.getElementById(this.card.id)
+        div.style.display = "none"
+      })
     }
   },
   watch: {
     card: {
       deep: true,
       handler(card){
-        if(card.hasNewEvent){
+        if(card.hasNewAnimation){
           while(card.events.length>0){
             const event = card.events.shift()
             switch (event.type) {
               case 'ATTACKED':
-                this.attacked()
+                this.attacked(event.message)
                 break
               case 'ATTACKING':
-                this.attacking()
+                this.attacking(event.message)
                 break
               case 'DYING':
                 this.dying()
                 break
             }           
           }
-          card.hasNewEvent = false
+          card.hasNewAnimation = false
         }
       }
     }
@@ -128,18 +136,42 @@ export default {
 
   .A-attacking {
     animation: attackingDown 1s;
+    box-shadow: 0 4px 8px 0 rgba(255, 0, 0, 0.2), 0 6px 20px 0 rgb(167, 1, 1);
   }
 
   .B-attacking {
     animation: attackingUp 1s;
+    box-shadow: 0 4px 8px 0 rgba(255, 0, 0, 0.2), 0 6px 20px 0 rgb(167, 1, 1);
   }
 
   .A-attacked {
-    animation: attackedUp 1s;
+    animation: attackedUp 1s, blink 0.3s infinite;
+    box-shadow: 0 4px 8px 0 rgba(255, 0, 0, 0.2), 0 6px 20px 0 rgb(167, 1, 1);
   }
 
   .B-attacked {
-    animation: attackedDown 1s;
+    animation: attackedDown 1s, blink 0.4s infinite;
+    box-shadow: 0 4px 8px 0 rgba(255, 0, 0, 0.2), 0 6px 20px 0 rgb(167, 1, 1);
+  }
+
+  .A-dying {
+    animation: fadeOutUp 2s;
+  }
+
+  .B-dying {
+    animation: fadeOutDown 2s;
+  }
+
+  /* .damageMask {
+    background-color: crimson;
+    animation: blink 0.2s infinite;
+    opacity: 0.5;
+  } */
+
+  @keyframes blink {
+    0% { opacity: 0.8; color: crimson; }
+    50% { opacity: 0.7; color: crimson; }
+    100% { opacity: 0.4; color: crimson;}
   }
 
   @keyframes selected {

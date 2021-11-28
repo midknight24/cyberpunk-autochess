@@ -1,4 +1,4 @@
-import {Event} from './CoreGame.js'
+import {Animation} from './CoreGame.js'
 
 class Action {
     constructor(initiator){
@@ -13,6 +13,24 @@ class TargetedAction extends Action {
     }
 }
 
+class DieAction extends Action {
+
+    constructor(initiator){
+        super(initiator)
+    }
+
+    emitDieAnimation(){
+        const e = new Animation('DYING', this.initiator, "")
+        this.initiator.game.animations.push(e)
+    }
+
+
+    resolve(){
+        this.emitDieAnimation()
+        this.initiator.move(0)
+    }
+}
+
 
 class Attack extends TargetedAction {
 
@@ -20,49 +38,51 @@ class Attack extends TargetedAction {
         super(initiator, targets)
     }
 
-    emitAttackEvent(target){
-        const e = new Event('ATTACKED', target.id, "")
-        target.events.push(e)
-        target.hasNewEvent = true
+    emitAttackedAnimation(target){
+        const e = new Animation('ATTACKED', target, {
+            powerType: target.powerType,
+            power: target.power,
+            armor: target.armor
+        }, 1500, 250)
+        target.game.animations.push(e)
     }
 
     resolve(){
-
+        console.log("resolving attack")
         if(this.initiator.dead){
             return
         }
-
-        const e = new Event('ATTACKING',this.initiator.id,"")
-        this.initiator.events.push(e)
-        this.initiator.hasNewEvent = true
+        const targets = this.targets.filter(t=>!t.dead)
+        if(targets.length == 0) return
         
-        this.targets.forEach(target=>{
+        const target = targets[0]
 
-            if(target.dead) return
+        if(target.dead){
+            console.log('already dead')
+            return
+        }
 
-            if(this.initiator.powerType == 'RANGED'){
-                target.takeHit(this.initiator.power, this.initiator)
-                setTimeout(()=>{
-                    this.emitAttackEvent(target)
-                }, 800)
+        if(this.initiator.powerType == 'RANGED'){
+            target.takeHit(this.initiator.power, this.initiator)
+        }
+        else if(this.initiator.powerType == 'MELEE'){
+            const bounceDamage = target.power
+            target.takeHit(this.initiator.power, this.initiator)
 
-            }
-            else if(this.initiator.powerType == 'MELEE'){
+            this.initiator.takeHit(bounceDamage, target)
+        }
 
-                const bounceDamage = target.power
-                target.takeHit(this.initiator.power, this.initiator)
-                setTimeout(()=>{
-                    this.emitAttackEvent(target)
-                }, 800)
-
-                this.initiator.takeHit(bounceDamage, target)
-            }
+        const e = new Animation('ATTACKING',this.initiator,{
+            powerType: this.initiator.powerType,
+            power: this.initiator.power,
+            armor: this.initiator.armor
         })
-
+        this.initiator.game.animations.push(e)
+        this.emitAttackedAnimation(target)
 
         this.initiator.actioned = true
     }
     
 }
 
-export {Attack}
+export {Attack, DieAction}

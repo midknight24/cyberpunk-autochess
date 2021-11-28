@@ -13,6 +13,30 @@
         :key="minion.id"
         v-for="minion in game.minions"></Card>
       <el-button class="NextRoundBtn" type="primary" @click="game.runTurn()">Next Round</el-button>
+      <el-button class="SpawnBtn" type="success" plain @click="formVisible = !formVisible">Spawn Minion</el-button>
+      <el-dialog :visible.sync="formVisible" :model="minionForm">
+        <el-form>
+          <el-form-item label="Armor">
+            <el-input v-model="minionForm.armor"></el-input>
+          </el-form-item>
+          <el-form-item label="Power">
+            <el-input v-model="minionForm.power"></el-input>
+          </el-form-item>
+          <el-form-item label="Power Type">
+            <el-select v-model="minionForm.powerType">
+              <el-option :label="'⚔️'" :value="'MELEE'"></el-option>
+              <el-option :label="'🎯'" :value="'RANGED'"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="Belongs To">
+            <el-select v-model="minionForm.playerBelong">
+              <el-option :label="'Player A'" :value="'A'"></el-option>
+              <el-option :label="'Player B'" :value="'B'"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-button @click="spawnMinion">Spawn</el-button>
+        </el-form>
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -20,7 +44,8 @@
 <script>
 import BattleGrid from './components/BattleGrid.vue'
 import Card from './components/Card.vue'
-import {Game} from './CoreGame.js'
+import {Game, Minion} from './CoreGame.js'
+import 'animate.css'
 export default {
   name: 'App',
   components: {
@@ -29,7 +54,14 @@ export default {
   data() {
     return {
       greeting: 'Hello World',
-      game: new Game()
+      game: new Game(),
+      formVisible: false,
+      minionForm: {
+        armor: 0,
+        power: 1,
+        powerType: 'MELEE',
+        playerBelong: 'A'
+      }
     }
   },
   methods: {
@@ -39,6 +71,21 @@ export default {
       event.dataTransfer.dropEffect = "move"
       event.dataTransfer.effectAllowed = "move"
     },
+    spawnMinion(){
+      var minion = new Minion(
+        this.minionForm.playerBelong,
+        'customMinion',
+        'images/CyberThug.jpg',
+        {
+          powerType: this.minionForm.powerType,
+          power: this.minionForm.power,
+          armor: this.minionForm.armor
+        },
+        this.game
+      )
+      this.game.minions.push(minion)
+      this.formVisible = false
+    }
   },
   mounted(){
     console.log(this.game)
@@ -69,6 +116,14 @@ body, html {
   height: 5vh;
   position: absolute;
   top: 1%;
+  right: 1%;
+}
+
+.SpawnBtn {
+  width: 10vw;
+  height: 5vh;
+  position: absolute;
+  top: 10%;
   right: 1%;
 }
 </style>
