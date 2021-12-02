@@ -129,6 +129,9 @@ class EndTurnEvent extends Event{
     resolve(){
         this.game.currentRow = this.game.currentRow < 3? this.game.currentRow+1: 1
         this.game.events = []
+        if(this.game.currentRow!=1){
+            this.game.runRow()
+        }
     }
 }
 
@@ -141,6 +144,7 @@ class Game {
             'A': [0,0,0,0,0,0,0,0,0],
             'B': [0,0,0,0,0,0,0,0,0]
         }
+        this.hasNewAnimation = false
         this.minionSelected = null
         this.graveyard = []
         this.events = []
@@ -186,6 +190,18 @@ class Game {
     }
 
     runTurn(){
+        this.runRow()
+    }
+
+    runRow(){
+
+        const chanegRowAnim = new Animation('ROW_CHANGED',this,{
+            from: this.currentRow==1? 3:this.currentRow-1,
+            to: this.currentRow
+        })
+        this.animations.push(chanegRowAnim)
+
+
         var currentArray = Array.from([1,2,3], x => x+3*(this.currentRow-1))
         var shuffled = shuffle(currentArray)
         shuffled.forEach((ind)=>{

@@ -11,15 +11,15 @@
         <el-col :span="8" class="battle-slot"><div id="a-6" class="grid-content bg-purple" @dragover="allowdrop" @drop="dropped($event)"></div></el-col>
       </el-row>
       <el-row :gutter="10" class="battle-row">
-        <el-col :span="8" class="battle-slot"><div id="a-1" class="grid-content bg-purple grid-highligh" @dragover="allowdrop" @drop="dropped($event)"></div></el-col>
-        <el-col :span="8" class="battle-slot"><div id="a-2" class="grid-content bg-purple-light grid-highligh" @dragover="allowdrop" @drop="dropped($event)"></div></el-col>
-        <el-col :span="8" class="battle-slot"><div id="a-3" class="grid-content bg-purple grid-highligh" @dragover="allowdrop" @drop="dropped($event)"></div></el-col>
+        <el-col :span="8" class="battle-slot"><div id="a-1" class="grid-content bg-purple" @dragover="allowdrop" @drop="dropped($event)"></div></el-col>
+        <el-col :span="8" class="battle-slot"><div id="a-2" class="grid-content bg-purple-light" @dragover="allowdrop" @drop="dropped($event)"></div></el-col>
+        <el-col :span="8" class="battle-slot"><div id="a-3" class="grid-content bg-purple" @dragover="allowdrop" @drop="dropped($event)"></div></el-col>
       </el-row>
       <el-divider><i class="el-icon-close"></i></el-divider>
       <el-row :gutter="10" class="battle-row">
-        <el-col :span="8" class="battle-slot"><div id="b-1" class="grid-content bg-purple grid-highligh" @dragover="allowdrop" @drop="dropped($event)"></div></el-col>
-        <el-col :span="8" class="battle-slot"><div id="b-2" class="grid-content bg-purple-light grid-highligh" @dragover="allowdrop" @drop="dropped($event)"></div></el-col>
-        <el-col :span="8" class="battle-slot"><div id="b-3" class="grid-content bg-purple grid-highligh" @dragover="allowdrop" @drop="dropped($event)"></div></el-col>
+        <el-col :span="8" class="battle-slot"><div id="b-1" class="grid-content bg-purple" @dragover="allowdrop" @drop="dropped($event)"></div></el-col>
+        <el-col :span="8" class="battle-slot"><div id="b-2" class="grid-content bg-purple-light" @dragover="allowdrop" @drop="dropped($event)"></div></el-col>
+        <el-col :span="8" class="battle-slot"><div id="b-3" class="grid-content bg-purple" @dragover="allowdrop" @drop="dropped($event)"></div></el-col>
       </el-row>
       <el-row :gutter="10" class="battle-row">
         <el-col :span="8" class="battle-slot"><div id="b-4" class="grid-content bg-purple" @dragover="allowdrop" @drop="dropped($event)"></div></el-col>
@@ -49,17 +49,19 @@ export default {
       game: {
         deep: true,
         handler(game){
-          this.currentRow = game.currentRow
+          if(game.hasNewAnimation){
+            while(game.events.length>0){
+              const event = game.events.shift()
+              switch(event.type){
+                case 'ROW_CHANGED':
+                  console.log('ROW_CHANGED')
+                  this.changeRow(event.message.from, event.message.to)
+                  break
+              }
+            }
+          }
         }
       },
-      currentRow: {
-        handler(newRow, oldRow){
-            this.unfocusRow('a', oldRow)
-            this.unfocusRow('b', oldRow)
-            this.focusRow('a', newRow)
-            this.focusRow('b', newRow)
-        }
-      }
 
     }, 
     methods: {
@@ -94,6 +96,16 @@ export default {
           if(grid)
             grid.classList.remove('grid-highligh')
         })
+      },
+      changeRow: function(from, to) {
+        console.log(from,to)
+        if(from>0){
+          
+          this.unfocusRow('a', from)
+          this.unfocusRow('b', from)
+        }
+          this.focusRow('a', to)
+          this.focusRow('b', to)
       }
     }
 
@@ -133,7 +145,7 @@ export default {
   background-color: #f9fafc;
 }
 
-/* .grid-highligh {
+.grid-highligh {
   box-shadow: 0 4px 8px 0 rgba(114, 45, 132, 0.2), 0 6px 20px 0 rgba(98, 169, 243, 1);
-} */
+}
 </style>
