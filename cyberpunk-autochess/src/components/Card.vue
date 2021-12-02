@@ -71,6 +71,17 @@ export default {
         const div = document.getElementById(this.card.id)
         div.style.display = "none"
       })
+    },
+    move: function(fromLoc, toLoc){
+      const card = document.getElementById(`${this.card.id}`)
+        card.classList.add('moving')
+        setTimeout(()=>{
+            const oldParent = document.getElementById(`${this.card.playerBelong.toLowerCase()}-${fromLoc}`)
+            const newParent = document.getElementById(`${this.card.playerBelong.toLowerCase()}-${toLoc}`)
+            oldParent.removeChild(card)
+            newParent.appendChild(card)
+            setTimeout(()=>{card.classList.remove('moving')}, 400)
+        },1000)
     }
   },
   watch: {
@@ -89,6 +100,9 @@ export default {
                 break
               case 'DYING':
                 this.dying()
+                break
+              case 'MOVE':
+                this.move(event.message.from, event.message.to)
                 break
             }           
           }
@@ -125,9 +139,15 @@ export default {
     cursor: grab;
   }
 
+  .moving {
+    box-shadow: 0 4px 8px 0 rgba(114, 45, 132, 0.2), 0 6px 20px 0 rgba(98, 169, 243, 1);
+  }
+
+
   .card:hover {
     animation: selected 1s; 
     animation-fill-mode: forwards;
+    box-shadow: 0 4px 8px 0 rgba(114, 45, 132, 0.2), 0 6px 20px 0 rgba(98, 169, 243, 1);
   }
 
   .playerAColor {

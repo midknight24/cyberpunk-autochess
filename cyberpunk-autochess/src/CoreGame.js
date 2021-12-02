@@ -79,11 +79,11 @@ class Minion {
             nextSlot -= 3
         }
         this.move(nextSlot)
-        const card = document.getElementById(`${this.id}`)
-        const oldParent = document.getElementById(`${this.playerBelong.toLowerCase()}-${prevLocation}`)
-        const newParent = document.getElementById(`${this.playerBelong.toLowerCase()}-${this.location}`)
-        oldParent.removeChild(card)
-        newParent.appendChild(card)
+        const anim = new Animation('MOVE', this, {
+            from: prevLocation,
+            to: nextSlot
+        }, 1500)
+        this.game.animations.push(anim)
         return nextSlot
     }
 

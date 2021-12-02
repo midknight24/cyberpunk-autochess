@@ -133,7 +133,7 @@ export default {
   background-color: #f9fafc;
 }
 
-.grid-highligh {
+/* .grid-highligh {
   box-shadow: 0 4px 8px 0 rgba(114, 45, 132, 0.2), 0 6px 20px 0 rgba(98, 169, 243, 1);
-}
+} */
 </style>
