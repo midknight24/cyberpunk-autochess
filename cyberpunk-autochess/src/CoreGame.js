@@ -193,6 +193,12 @@ class Game {
         this.runRow()
     }
 
+    pushMinions(){
+        this.minions.forEach(m=>{
+            m.forward()
+        })
+    }
+
     runRow(){
 
         const chanegRowAnim = new Animation('ROW_CHANGED',this,{
