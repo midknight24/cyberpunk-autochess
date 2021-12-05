@@ -1,5 +1,5 @@
 <template>
-  <div class="card" draggable="true" :class="{playerAColor: card.playerBelong == 'A'}">
+  <div class="card" draggable="false" :class="{playerAColor: card.playerBelong == 'A'}">
     <div class="card_img">
       <img draggable="false" :src="this.img">
     </div>
@@ -43,7 +43,8 @@ export default {
       var armorEmoji = "🛡️"
       var armor = stats.armor>0? armorEmoji+stats.armor:""
       var power = powerEmoji+stats.power
-      const total = power+armor
+      var cost = stats.cost? `(🪙${stats.cost})`:""
+      const total = power+armor+cost
       return total
     },
 
@@ -74,14 +75,10 @@ export default {
     },
     move: function(fromLoc, toLoc){
       const card = document.getElementById(`${this.card.id}`)
-        card.classList.add('moving')
-        setTimeout(()=>{
-            const oldParent = document.getElementById(`${this.card.playerBelong.toLowerCase()}-${fromLoc}`)
-            const newParent = document.getElementById(`${this.card.playerBelong.toLowerCase()}-${toLoc}`)
-            oldParent.removeChild(card)
-            newParent.appendChild(card)
-            setTimeout(()=>{card.classList.remove('moving')}, 400)
-        },1000)
+      const oldParent = document.getElementById(`${this.card.playerBelong.toLowerCase()}-${fromLoc}`)
+      const newParent = document.getElementById(`${this.card.playerBelong.toLowerCase()}-${toLoc}`)
+      oldParent.removeChild(card)
+      newParent.appendChild(card)
     }
   },
   watch: {

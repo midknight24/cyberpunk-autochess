@@ -1,11 +1,11 @@
 import { nanoid } from 'nanoid'
 import {shuffle,drawRandom} from './utils.js'
-import {Attack, DieAction} from './Action.js'
+import {AttemptAttack, DieAction, PushBoardAction} from './Action.js'
 class Minion {
     // stats: {'power': 3, 'shield': 4, ...}
     // actions: [MeleeAttackCls, HealCls, ...]
 
-    constructor(playerBelong, name, image, stats, game, actions=[Attack]){
+    constructor(playerBelong, name, image, stats, game, actions=[AttemptAttack]){
         this.id = nanoid()
         this.name = name
         this.image = image
@@ -41,10 +41,11 @@ class Minion {
 
         var target = this.game.battleGround[this.playerBelong][targetSlot-1]
         if(target != 0 && targetSlot != 0){
-            throw 'Slot occupied'
+            return
         }
 
         this.game.battleGround[this.playerBelong][targetSlot-1] = this
+        console.log(this.game.battleGround[this.playerBelong])
         this.location = targetSlot
     }
     takeHit(amount, by){
@@ -60,29 +61,34 @@ class Minion {
     }
     die(){
         this.dead = true
+        const p = new PushBoardAction(this.game)
+        this.game.events.unshift(p)
         const d = new DieAction(this)
         this.game.events.unshift(d)
         console.log(this.game.events)
+
     }
 
     // forward as far as possible, return new location
     forward(){
+        console.log('forward from location: ', this.location)
         if(this.location<=3){
             return this.location
         }
         const prevLocation = this.location
-        var nextSlot = this.location - 3
+        var nextSlot = this.location
 
-        if(this.game.battleGround[this.playerBelong][nextSlot-1] != 0) return this.location
-
-        while(nextSlot>3 && (this.game.battleGround[this.playerBelong][nextSlot-1] == 0)){
+        while(nextSlot>3 && (this.game.battleGround[this.playerBelong][nextSlot-4] == 0)){
             nextSlot -= 3
         }
+        if(nextSlot == prevLocation) return prevLocation
+
+        console.log('MOVIGN to SLOT: ', nextSlot)
         this.move(nextSlot)
         const anim = new Animation('MOVE', this, {
             from: prevLocation,
             to: nextSlot
-        }, 1500)
+        }, 300)
         this.game.animations.push(anim)
         return nextSlot
     }
@@ -129,9 +135,9 @@ class EndTurnEvent extends Event{
     resolve(){
         this.game.currentRow = this.game.currentRow < 3? this.game.currentRow+1: 1
         this.game.events = []
-        if(this.game.currentRow!=1){
-            this.game.runRow()
-        }
+        // if(this.game.currentRow!=1){
+        //     this.game.runRow()
+        // }
     }
 }
 
@@ -150,27 +156,8 @@ class Game {
         this.events = []
         this.animations = []
         this.newEvent = false
-        this.minions = [
-            new Minion(
-            'A',
-            'Cyberthug',
-            'images/CyberThug.jpg',
-            {
-              powerType: 'MELEE',
-              power: 3
-            },
-            this
-            ),
-            new Minion(
-                'B',
-                'Cyberthug',
-                'images/CyberThug.jpg',
-                {
-                  powerType: 'MELEE',
-                  power: 2
-                }, this
-                ),
-        ]
+        this.minionsOrder = []
+        this.minions = []
     }
 
     canDrop(slot, minion){
@@ -190,50 +177,44 @@ class Game {
     }
 
     runTurn(){
+        this.pushMinions()
+        this.determineOrder()
         this.runRow()
     }
 
+    determineOrder(){
+        for(let i=0;i<9;i++){
+            var SideOrder = shuffle(['A','B'])
+            SideOrder.forEach(s=>{
+                var thisMinion = this.battleGround[s][i]
+                if(thisMinion){
+                    this.minionsOrder.push(thisMinion)
+                }
+            })
+        }
+    }
+
     pushMinions(){
-        this.minions.forEach(m=>{
-            m.forward()
-        })
+        for(let i=0;i<9;i++){
+            var SideOrder = shuffle(['A','B'])
+            SideOrder.forEach(s=>{
+                var thisMinion = this.battleGround[s][i]
+                if(thisMinion){
+                    thisMinion.forward()
+                }
+            })
+        }
     }
 
     runRow(){
 
-        const chanegRowAnim = new Animation('ROW_CHANGED',this,{
-            from: this.currentRow==1? 3:this.currentRow-1,
-            to: this.currentRow
+        this.minionsOrder.forEach(minion=>{
+            var action = minion.action()
+            const a = new action(minion)
+            this.events.push(a)
         })
-        this.animations.push(chanegRowAnim)
 
 
-        var currentArray = Array.from([1,2,3], x => x+3*(this.currentRow-1))
-        var shuffled = shuffle(currentArray)
-        shuffled.forEach((ind)=>{
-            var index = ind - 1
-            var SideOrder = shuffle(['A','B'])
-            var minions = []
-            SideOrder.forEach(s=>{
-                var thisMinion = this.battleGround[s][index]
-                if(thisMinion){
-                    thisMinion.forward()
-                    minions.push(thisMinion)
-                }
-            })
-            minions.forEach(minion=>{
-                if(minion.location>3 && minion.stats.powerType !='RANGED') return         
-                var enemy = this.battleGround[minion.playerBelong=='A'?'B':'A'][(minion.location-1)%3]
-                if(enemy){
-                    console.log("FOUND enmey")
-                    var action = minion.action()
-                    action = new action(minion, [enemy])
-                    this.events.push(action)
-                }
-
-
-            })
-        })
         const endEvent = new EndTurnEvent(this)
         this.events.push(endEvent)
         this.resolveActions()

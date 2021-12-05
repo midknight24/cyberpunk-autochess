@@ -6,6 +6,12 @@ class Action {
     }
 }
 
+class PushBoardAction extends Action {
+    resolve(){
+        this.initiator.pushMinions()
+    }
+}
+
 class TargetedAction extends Action {
     constructor(initiator, targets){
         super(initiator)
@@ -28,6 +34,19 @@ class DieAction extends Action {
     resolve(){
         this.emitDieAnimation()
         this.initiator.move(0)
+    }
+}
+
+class AttemptAttack extends Action {
+    resolve(){
+        const minion = this.initiator
+        if(minion.location>3 && minion.stats.powerType !='RANGED') return         
+        var enemy = minion.game.battleGround[minion.playerBelong=='A'?'B':'A'][(minion.location-1)%3]
+        if(enemy){
+            const action = new Attack(minion, [enemy])
+            minion.game.events.unshift(action)
+        }
+
     }
 }
 
@@ -85,4 +104,4 @@ class Attack extends TargetedAction {
     
 }
 
-export {Attack, DieAction}
+export {AttemptAttack, DieAction, PushBoardAction}

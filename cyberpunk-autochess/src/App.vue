@@ -14,6 +14,7 @@
         v-for="minion in game.minions"></Card>
       <el-button class="NextRoundBtn" type="primary" @click="game.runTurn()">Next Round</el-button>
       <el-button class="SpawnBtn" type="success" plain @click="formVisible = !formVisible">Spawn Minion</el-button>
+      <el-button class="ShopBtn" type="warning" plain @click="shopVisible = !shopVisible">Shop</el-button>
       <el-dialog :visible.sync="formVisible" :model="minionForm">
         <el-form>
           <el-form-item label="Armor">
@@ -34,8 +35,14 @@
               <el-option :label="'Player B'" :value="'B'"></el-option>
             </el-select>
           </el-form-item>
+          <el-form-item label="Number">
+            <el-input-number v-model="minionForm.count" :min="1" :max="10"></el-input-number>
+          </el-form-item>
           <el-button @click="spawnMinion">Spawn</el-button>
         </el-form>
+      </el-dialog>
+      <el-dialog :visible.sync="shopVisible">
+        <MinionStore :game="game"></MinionStore>
       </el-dialog>
     </div>
   </div>
@@ -44,23 +51,26 @@
 <script>
 import BattleGrid from './components/BattleGrid.vue'
 import Card from './components/Card.vue'
+import MinionStore from './components/MinionStore.vue'
 import {Game, Minion} from './CoreGame.js'
 import 'animate.css'
 export default {
   name: 'App',
   components: {
-    BattleGrid, Card
+    BattleGrid, Card, MinionStore
   },
   data() {
     return {
       greeting: 'Hello World',
       game: new Game(),
       formVisible: false,
+      shopVisible: false,
       minionForm: {
         armor: 0,
         power: 1,
         powerType: 'MELEE',
-        playerBelong: 'A'
+        playerBelong: 'A',
+        count:1
       }
     }
   },
@@ -72,18 +82,19 @@ export default {
       event.dataTransfer.effectAllowed = "move"
     },
     spawnMinion(){
-      var minion = new Minion(
-        this.minionForm.playerBelong,
-        'customMinion',
-        'images/CyberThug.jpg',
-        {
-          powerType: this.minionForm.powerType,
-          power: this.minionForm.power,
-          armor: this.minionForm.armor
-        },
-        this.game
-      )
-      this.game.minions.push(minion)
+      for(let i=0;i<this.minionForm.count;i++){
+        var minion = new Minion(
+          this.minionForm.playerBelong,
+          'customMinion',
+          'images/CyberThug.jpg',
+          {
+            powerType: this.minionForm.powerType,
+            power: this.minionForm.power,
+            armor: this.minionForm.armor
+          },
+        )
+        this.game.minions.push(minion)
+      }
       this.formVisible = false
     }
   },
@@ -124,6 +135,14 @@ body, html {
   height: 5vh;
   position: absolute;
   top: 10%;
+  right: 1%;
+}
+
+.ShopBtn {
+  width: 10vw;
+  height: 5vh;
+  position: absolute;
+  top: 20%;
   right: 1%;
 }
 </style>
