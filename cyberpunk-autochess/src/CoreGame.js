@@ -133,9 +133,9 @@ class EndTurnEvent extends Event{
         this.game = game
     }
     resolve(){
-        this.game.currentRow = this.game.currentRow < 3? this.game.currentRow+1: 1
+        this.game.currentCol = this.game.currentCol < 3? this.game.currentCol+1: 1
         this.game.events = []
-        // if(this.game.currentRow!=1){
+        // if(this.game.currentCol!=1){
         //     this.game.runRow()
         // }
     }
@@ -145,7 +145,7 @@ class EndTurnEvent extends Event{
 class Game {
     constructor(){
         this.turn = 0
-        this.currentRow = 1
+        this.currentCol = 1
         this.battleGround = {
             'A': [0,0,0,0,0,0,0,0,0],
             'B': [0,0,0,0,0,0,0,0,0]
@@ -183,15 +183,17 @@ class Game {
     }
 
     determineOrder(){
-        for(let i=0;i<9;i++){
+        var c = this.currentCol-1
+        const col = [c, c+3, c+6]
+        col.forEach(v=>{
             var SideOrder = shuffle(['A','B'])
             SideOrder.forEach(s=>{
-                var thisMinion = this.battleGround[s][i]
+                var thisMinion = this.battleGround[s][v]
                 if(thisMinion){
                     this.minionsOrder.push(thisMinion)
                 }
-            })
-        }
+            })            
+        })
     }
 
     pushMinions(){
